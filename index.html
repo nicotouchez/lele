@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekko & Jinx - Nosso Universo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', sans-serif;
+            color: #fff;
+            text-align: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px;
+            position: relative;
+        }
+
+        #video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .overlay-dark {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 20px 0;
+            color: #ff0a78;
+            text-shadow: 0 0 10px #ff0a78, 0 0 20px #ff0a78;
+            animation: glow 2s infinite alternate;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 20px 0;
+            color: #00f7ff;
+            text-shadow: 0 0 5px #00f7ff;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #ff0a78; }
+            to { text-shadow: 0 0 15px #ff0a78, 0 0 25px #ff0a78; }
+        }
+
+        .secret-button {
+            background: rgba(0, 247, 255, 0.2);
+            border: 2px solid #00f7ff;
+            color: #00f7ff;
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px #00f7ff;
+            animation: pulse 2s infinite;
+        }
+
+        .secret-button:hover {
+            background: rgba(0, 247, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px #00f7ff; }
+            50% { box-shadow: 0 0 20px #00f7ff; }
+            100% { box-shadow: 0 0 10px #00f7ff; }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .modal video {
+            width: 100%;
+            border: 3px solid #ff0a78;
+            border-radius: 10px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: #ff0a78;
+            font-size: 30px;
+            cursor: pointer;
+            text-shadow: 0 0 5px #000;
+        }
+
+        .message {
+            margin: 30px auto;
+            max-width: 600px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #00f7ff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #00f7ff;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            margin: 30px auto;
+            max-width: 1200px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border: 3px solid #ff0a78;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(255, 10, 120, 0.5);
+        }
+
+        .gallery img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 20px #ff0a78;
+            border-color: #00f7ff;
+        }
+
+        .secret-photo {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .secret-photo .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+
+        .secret-photo:hover .overlay {
+            opacity: 1;
+        }
+
+        .overlay-text {
+            color: #ff0a78;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 20px;
+            text-shadow: 0 0 5px #000;
+            font-weight: bold;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            border: 3px solid #00f7ff;
+            border-radius: 10px;
+            box-shadow: 0 0 30px #ff0a78;
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #ff0a78;
+            font-size: 40px;
+            cursor: pointer;
+            text-shadow: 0 0 5px #000;
+        }
+
+        .audio-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .audio-controls button {
+            background: #ff0a78;
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .audio-controls button:hover {
+            background: #00f7ff;
+            transform: scale(1.1);
+        }
+
+        .mobile-message {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: #ff0a78;
+            padding: 10px;
+            font-size: 1rem;
+            text-align: center;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .gallery img:active + .mobile-message,
+            .secret-photo:active .mobile-message {
+                display: block;
+            }
+            
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            .gallery img, .secret-photo img {
+                height: 150px;
+            }
+            .overlay-text {
+                font-size: 1rem;
+                padding: 10px;
+            }
+            .audio-controls {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <video id="video-background" autoplay loop>
+        <source src="Ekko e Jinx dançando JUNTOS!!! _ Arcane _ Netflix Brasil.mp4" type="video/mp4">
+        Seu navegador não suporta vídeos HTML5.
+    </video>
+    <div class="overlay-dark"></div>
+
+    <div class="audio-controls">
+        <button id="playPauseBtn">⏸️</button>
+        <button id="muteBtn">🔊</button>
+    </div>
+
+    <h1>Ekko & Jinx - Nosso Universo</h1>
+    
+    <button class="secret-button" onclick="openModal()">Clique para uma surpresa! ❓</button>
+    
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <video controls autoplay>
+                <source src="video.mp4" type="video/mp4">
+                Seu navegador não suporta o vídeo.
+            </video>
+        </div>
+    </div>
+
+    <div class="message">
+        <p>Feliz Dia dos Namorados, amozona. Cada momento ao seu lado é como viver em uma história única, caótica e maravilhosa — como Ekko e Jinx em um mundo só nosso. Que nossas loucuras continuem se encontrando nesse universo só nosso. Te amo com todas as versões do meu tempo.</p>
+    </div>
+
+    <h2>Nossas Melhores Memórias</h2>
+    <div class="gallery">
+        <div class="secret-photo">
+            <img src="img1.jpg" alt="Nossa foto 1" onclick="openLightbox(this.src)">
+            <div class="overlay" onclick="openLightbox('img1.jpg')">
+                <div class="overlay-text">Nosso bb ❤️</div>
+            </div>
+            <div class="mobile-message">Nosso bb ❤️</div>
+        </div>
+        
+        <div class="secret-photo">
+            <img src="img2.jpg" alt="Foto secreta">
+            <div class="overlay" onclick="openLightbox('img2.jpg')">
+                <div class="overlay-text">Vc todinha ❤️</div>
+            </div>
+            <div class="mobile-message">Vc todinha ❤️</div>
+        </div>
+        
+        <div class="secret-photo">
+            <img src="img3.jpg" alt="Nossa foto 3" onclick="openLightbox(this.src)">
+            <div class="overlay" onclick="openLightbox('img3.jpg')">
+                <div class="overlay-text">Me apaixonei quando vi essa foto</div>
+            </div>
+            <div class="mobile-message">Me apaixonei quando vi essa foto</div>
+        </div>
+        
+        <div class="secret-photo">
+            <img src="img4.jpg" alt="Nossa foto 4" onclick="openLightbox(this.src)">
+            <div class="overlay" onclick="openLightbox('img4.jpg')">
+                <div class="overlay-text">Te amo infinito</div>
+            </div>
+            <div class="mobile-message">Te amo infinito</div>
+        </div>
+        
+        <div class="secret-photo">
+            <img src="img5.jpg" alt="Foto secreta">
+            <div class="overlay" onclick="openLightbox('img5.jpg')">
+                <div class="overlay-text">Minha reação quando me afastam do meu bb 😠</div>
+            </div>
+            <div class="mobile-message">Minha reação quando me afastam do meu bb 😠</div>
+        </div>
+        
+        <div class="secret-photo">
+            <img src="img6.jpg" alt="Nossa foto 6" onclick="openLightbox(this.src)">
+            <div class="overlay" onclick="openLightbox('img6.jpg')">
+                <div class="overlay-text">Zoin Apaixonado</div>
+            </div>
+            <div class="mobile-message">Zoin Apaixonado</div>
+        </div>
+        
+        <div class="secret-photo">
+            <img src="img7.jpg" alt="Nossa foto 7" onclick="openLightbox(this.src)">
+            <div class="overlay" onclick="openLightbox('img7.jpg')">
+                <div class="overlay-text">Meu porto seguro</div>
+            </div>
+            <div class="mobile-message">Meu porto seguro</div>
+        </div>
+        
+        <img src="img8.jpg" alt="Nossa foto 8" onclick="openLightbox(this.src)">
+    </div>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" class="lightbox-content">
+    </div>
+
+    <script>
+        const backgroundVideo = document.getElementById('video-background');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const playPromise = backgroundVideo.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Autoplay bloqueado");
+                    playPauseBtn.textContent = "▶️";
+                }).then(() => {
+                    playPauseBtn.textContent = "⏸️";
+                });
+            }
+        });
+
+        playPauseBtn.addEventListener('click', () => {
+            if (backgroundVideo.paused) {
+                backgroundVideo.play();
+                playPauseBtn.textContent = "⏸️";
+            } else {
+                backgroundVideo.pause();
+                playPauseBtn.textContent = "▶️";
+            }
+        });
+
+        muteBtn.addEventListener('click', () => {
+            backgroundVideo.muted = !backgroundVideo.muted;
+            muteBtn.textContent = backgroundVideo.muted ? "🔇" : "🔊";
+        });
+
+        function openModal() {
+            document.getElementById('videoModal').style.display = 'flex';
+            document.querySelector('#videoModal video').play();
+        }
+
+        function closeModal() {
+            document.getElementById('videoModal').style.display = 'none';
+            document.querySelector('#videoModal video').pause();
+        }
+
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightbox.style.display = 'flex';
+            lightboxImg.src = src;
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('videoModal')) {
+                closeModal();
+            }
+            if (event.target == document.getElementById('lightbox')) {
+                closeLightbox();
+            }
+        }
+    </script>
+</body>
+</html>
